@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsenui.css">
+  <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsen-css-components.min.css">
+  <link rel="stylesheet" href="test.css">
+  <script src="https://unpkg.com/onsenui/js/onsenui.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.3.0/mustache.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
+  <script src="ins.js"></script>
+  <title>IG</title>
+  <script id="template" type="x-tmpl-mustache">
+    <div id="posts{{id}}">
+      <ons-card class="post">
+        <ons-list-item class="post_title">
+          <div class="left">
+            <i class="ion-android-person" style="font-size:50px"></i>
+          </div>
+          <div class="center">
+            <div class="list-item__title"><b>zom</b></div>
+            <div class="list-item__subtitle" style="font-size: 12px">
+                <input type="hidden"  id="location{{id}}" value="{{location}} " readonly> </input>
+                {{location}}
+              </div>
+          </div>
+          <div class="right">
+            <ons-button class="corner-button" modifier="quiet" onclick="editpost({{id}})">&nbsp;
+              <ons-icon icon="ion-edit"></ons-icon>
+            </ons-button>
+            <ons-button class="corner-button" modifier="quiet" onclick="savepost({{id}})"> &nbsp;
+              <ons-icon icon="ion-checkmark"></ons-icon>
+            </ons-button>
+            <ons-button class="corner-button" modifier="quiet" onclick="deletepost({{id}})"> &nbsp;
+              <ons-icon icon="ion-trash-a"></ons-icon>
+            </ons-button>
+          </div>
+        </ons-list-item>
+
+        <div style="text-align: center; position: relative;" ondblclick="like(1)">
+            <ons-icon size="150px" id="post-like-1" class="post-like" icon="ion-ios-heart"></ons-icon>
+            <img class="post-image" src="{{picture}}">
+            <input type="hidden"  id="picture{{id}}" value="{{picture}} " readonly> </input>
+          </div>
+
+        <ons-list-item class="post-button-bar" modifier="nodivider">
+          <div class="center" style="padding-top: 0px">
+            <ons-button class="post-button" modifier="quiet" >
+              <ons-icon id="button-post-like-1" icon="ion-ios-heart-outline"></ons-icon>
+            </ons-button>
+
+          </div>
+          <div class="right corner-button bookmark">
+          </div>
+        </ons-list-item>
+
+        <div class="post-like-info"><b>someone_one</b> and {{like}} other liked this.</div>
+        <div class="post-caption"><b>zom</b> 
+          <label id="desc{{id}}">{{desc}}</label>
+          <input type="hidden"  id="descedit{{id}}" value="{{desc}}"> </input>
+        </div>
+      </input>
+        <div class="post-time">1 HOUR AGO</div>
+      </ons-card>
+
+    </div>
+    
+  </script>
+</head>
+
+<body>
+  <ons-page>
+    <ons-tabbar id="tabbar">
+      <ons-tab type="button" icon="ion-home" id="h" page="index.html" active>
+      </ons-tab>
+      <ons-tab type="button" icon="fa-plus-square-o" id="c" page="camera.html">
+      </ons-tab>
+      <ons-tab type="button" icon="ion-ios-person-outline" id="p" page="profile.html">
+      </ons-tab>
+    </ons-tabbar>
+  </ons-page>
+
+
+
+
+  <!-- The Home Page -->
+
+  <template id="index.html">
+    <ons-page class="main_pages" id="home-page">
+      <ons-toolbar>
+        <div class="center"><b>MEMORYME</b></div>
+        <div class="right">
+          <label class="toolbar">
+                <span class="toolbar-button">  
+                        <a href="/C:/Users/Zom/Desktop/JS/map.html">
+                        <input class="button--quiet" type="button" value="Map"></a>
+                      </span>
+              </label>
+        </div>
+      </ons-toolbar>
+<div id = "posts"></div>
+
+       <!-- <div> -->
+
+        <!-- The carousel contains the stories that will be populated on initialization of this page -->
+
+
+        <!-- The following three <ons-card> elements each contain a single post which is separated into several parts. The User info of the post, the picture, the buttons bar, the information who liked the post, the comments and the time passed since the user posted the picture -->
+        <!--
+        <ons-card class="post">
+          <ons-list-item class="post_title">
+            <div class="left">
+              <i class="ion-android-person" style="font-size:50px"></i>
+            </div>
+            <div class="center">
+              <div class="list-item__title"><b>zom</b></div>
+              <div class="list-item__subtitle" style="font-size: 12px">Fushimi Inari Shrine, Kyoto</div>
+            </div>
+            <div class="right">
+              <ons-button class="corner-button" modifier="quiet">
+                <ons-icon icon="ion-close"></ons-icon>
+              </ons-button>
+            </div>
+          </ons-list-item>
+
+          <div style="text-align: center; position: relative;" ondblclick="like(1)">
+            <ons-icon size="150px" id="post-like-1" class="post-like" icon="ion-ios-heart"></ons-icon>
+            <img class="post-image" src="b.jpg">
+          </div>
+
+          <ons-list-item class="post-button-bar" modifier="nodivider">
+            <div class="center" style="padding-top: 0px">
+              <ons-button class="post-button" modifier="quiet" onclick="like(1)">
+                <ons-icon id="button-post-like-1" icon="ion-ios-heart-outline"></ons-icon>
+              </ons-button>
+
+            </div>
+            <div class="right corner-button bookmark">
+            </div>
+          </ons-list-item>
+
+          <div class="post-like-info"><b>someone_one</b> and 24 other liked this.</div>
+          <div class="post-caption"><b>zom</b> beautiful kyoto #kyoto #fushimiinarishirine </div>
+          <div class="post-time">1 HOUR AGO</div>
+        </ons-card>
+      -->
+        <!-- <ons-card class="post">
+          <ons-list-item class="post_title">
+            <div class="left">
+              <i class="ion-android-person" style="font-size:50px"></i>
+            </div>
+            <div class="center">
+              <div class="list-item__title"><b>zom</b></div>
+              <div class="list-item__subtitle" style="font-size: 12px">Kinkakuji Temple, Kyoto</div>
+            </div>
+            <div class="right corner-button">
+              <ons-toolbar-button>
+                <ons-icon icon="ion-close"></ons-icon>
+              </ons-toolbar-button>
+            </div>
+          </ons-list-item>
+
+          <div style="text-align: center; position: relative;" ondblclick="like(2)">
+            <ons-icon size="150px" id="post-like-2" class="post-like" icon="ion-ios-heart"></ons-icon>
+            <img class="post-image" src="a.jpg">
+          </div>
+
+          <ons-list-item class="post-button-bar" modifier="nodivider">
+            <div class="center" style="padding-top: 0px">
+              <ons-button class="post-button" modifier="quiet" onclick="like(2)">
+                <ons-icon id="button-post-like-2" icon="ion-ios-heart-outline"></ons-icon>
+              </ons-button>
+
+            </div>
+            <div class="right corner-button bookmark">
+            </div>
+          </ons-list-item>
+
+          <div class="post-like-info"><b>someone_one</b> and 24 other liked this.</div>
+          <div class="post-caption"><b>zom</b> Golden Temple ^_^ #kyoto #goldentemple</div>
+          <div class="post-time">1 HOUR AGO</div>
+        </ons-card>
+
+        <ons-card class="post">
+          <ons-list-item class="post_title">
+            <div class="left">
+              <i class="ion-android-person" style="font-size:50px"></i>
+            </div>
+            <div class="center">
+              <div class="list-item__title"><b>zom</b></div>
+              <div class="list-item__subtitle" style="font-size: 12px">Tokyo</div>
+            </div>
+            <div class="right">
+              <ons-button class="corner-button" modifier="quiet">
+                <ons-icon icon="ion-close"></ons-icon>
+              </ons-button>
+            </div>
+          </ons-list-item>
+
+          <div style="text-align: center; position: relative;" ondblclick="like(3)">
+            <ons-icon size="150px" id="post-like-3" class="post-like" icon="ion-ios-heart"></ons-icon>
+            <img class="post-image" src="c.jpg">
+          </div>
+
+          <ons-list-item class="post-button-bar" modifier="nodivider">
+            <div class="center" style="padding-top: 0px">
+              <ons-button class="post-button" modifier="quiet" onclick="like(3)">
+                <ons-icon id="button-post-like-3" icon="ion-ios-heart-outline"></ons-icon>
+              </ons-button>
+
+            </div>
+            <div class="right corner-button bookmark">
+            </div>
+          </ons-list-item>
+
+          <div class="post-like-info"><b>someone_one</b> and 24 other liked this.</div>
+          <div class="post-caption"><b>zom</b> The harmony sakura brings #sakura #happy #harmony #love</div>
+          <div class="post-time">1 HOUR AGO</div>
+        </ons-card>
+
+      </div>-->
+
+      <style type="text/css">
+        .post {
+          margin: 0px;
+          padding: 0px 0px 15px;
+          font-size: 14px;
+          border-bottom: 1px solid rgba(175, 175, 175, 0.43);
+          border-radius: 0;
+        }
+
+        .post_title {
+          padding-left: 10px;
+        }
+
+        .post-caption {
+          padding-left: 10px;
+        }
+
+        .post-like-info {
+          margin-bottom: 5px;
+          padding-left: 10px;
+        }
+
+        .post-image {
+          width: 100%;
+        }
+
+        .post-time {
+          font-size: 10px;
+          opacity: 0.7;
+          margin-top: 5px;
+          padding-left: 10px;
+        }
+
+        .post-like {
+          opacity: 0;
+          width: 100%;
+          position: absolute;
+          top: 25%;
+          color: white;
+          transition: opacity 0.4s;
+        }
+
+        .post-button-bar {
+          height: 40px;
+          padding-left: 0px;
+        }
+
+        .post-button {
+          font-size: 26px;
+          color: #1f1f21;
+          line-height: 26px;
+        }
+
+        .corner-button {
+          color: black;
+          font-size: 25px;
+          padding-right: 0;
+        }
+
+        .like {
+          color: red;
+        }
+
+        .list-item__thumbnail {
+          border-radius: 50%;
+        }
+      </style>
+
+    </ons-page>
+  </template>
+
+
+
+
+  <!-- The Search Page -->
+
+
+
+
+
+
+  <!-- The Camera Page -->
+
+  <template id="camera.html">
+    <ons-page class="main_pages" id="camera-page">
+      <ons-toolbar>
+        <div class="center" id="toolbar-title"><b>Photo</b></div>
+        <div class="right">
+          <label class="toolbar">
+                <span class="toolbar-button">  
+                       
+                        <input class="button--quiet" id="postpin" type="button" value="Post"></a>
+                      </span>
+              </label>
+        </div>
+      </ons-toolbar>
+
+      <div style="background-color:#5C5757;color:white;padding:41%;">
+        <ons-icon class="camera-icon"icon="ion-android-camera" size="100px"></ons-icon>
+        <input ="textarea" class="textarea textarea--transparent" placeholder="URL PICTURE" id="picture"></textarea>
+      </div>
+
+      <ul class="list">
+        <li class="list-item">
+          <div class="list-item__center">
+            <input ="textarea" class="textarea textarea--transparent" placeholder="Text message...." id="desc"></textarea>
+          </div>
+        </li>
+      </ul>
+      <br>
+      <h> &nbsp;&nbsp; Location</h><br><br> &nbsp;&nbsp;&nbsp;
+      <input type="text" placeholder="Enter Your Location" class="search-input" id="location" style="width: 300px;">&nbsp;&nbsp;
+      <ons-icon class="location-icon" onclick="location.replace('map.html')" icon="ion-location" id="location"></ons-icon>
+    </ons-page>
+  </template>
+
+
+
+
+
+  <!--  The Profile Page -->
+
+  <template id="profile.html">
+    <ons-page class="main_pages" id="profile-page">
+      <ons-toolbar>
+
+        <div class="center"><b>PROFILE</b></div>
+        <div class="right">
+
+        </div>
+      </ons-toolbar>
+
+      <div class="content" style="background-color: white !important">
+
+        <!-- The content of the profile page is organized into several parts -->
+
+        <!-- The first part contains the user's profile picture on the left, and info about the number of posts, following and followed users on the right side of the screen -->
+
+        <div style="padding: 14px 6px 14px 16px;">
+          <div class="profile_wrapper">
+            <div class="profile_image_wrapper">
+              <i class="ion-android-person" style="font-size:50px"></i>
+            </div><br>
+            <div class="profile_info_wrapper" &nbsp;&nbsp;&nbsp;&nbsp;>
+              <div class="profile_info_numbers" &nbsp;&nbsp;&nbsp;&nbsp;>
+                <div>
+                  <div>3</div>
+                  <div class="profile_info_text">Posts</div>
+                </div>
+                <div>
+                  <div>150</div>
+                  <div class="profile_info_text">Followers</div>
+                </div>
+                <div>
+                  <div>150</div>
+                  <div class="profile_info_text">Following</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <div>
+            <p class="profile_extra_wrapper"> 80/2 M.1 Vichitsongklam Road, Kathu, Phuket, Thailand </p>
+          </div>
+        </div>
+
+
+        <!-- The next part contains the buttons bar. Since we don't want any pressing effect, the buttons are implemented as simple icons instead -->
+
+        <ons-row class="profile_button_bar">
+          <ons-col>
+            <ons-icon id="grid" icon="ion-grid" style="color: #5fb4f4" onclick="display('grid')"></ons-icon>
+          </ons-col>
+
+        <class="container">
+          <div>
+            <img src="b.jpg" height="200" width="300"></img> <img src="a.jpg" height="200" width="300"></img>
+          </div>
+          </class>
+          <class="container">
+            <div>
+              <img src="c.jpg" height="200" width="300"></img>
+            </div>
+            </class>
+
+            <!-- The last part is cosnisted of two <div> elements that display the posts of the users in two ways. The first one displays them as posts, just like the home screen, the other as a grid, similar to the search page -->
+
+            <div id="list_view" style="display: none;">
+              <ons-card class="post">
+                <ons-list-item class="post_title">
+                  <div class="left">
+
+                  </div>
+                  <div class="center">
+                    <div class="list-item__title"><b>zom</b></div>
+                    <div class="list-item__subtitle" style="font-size: 12px">Fushimi Inari Shrine, Kyoto</div>
+                  </div>
+                  <div class="right">
+                    <ons-button class="corner-button" modifier="quiet">
+                      <ons-icon icon="ion-ios-more,material:ion-android-more-vertical"></ons-icon>
+                    </ons-button>
+                  </div>
+                </ons-list-item>
+
+                <div style="text-align: center; position: relative;" ondblclick="like('01')">
+                  <ons-icon size="150px" id="post-like-01" class="post-like" icon="ion-ios-heart"></ons-icon>
+
+
+                </div>
+
+                <ons-list-item class="post-button-bar" modifier="nodivider">
+                  <div class="center" style="padding-top: 0px">
+                    <ons-button class="post-button" modifier="quiet" onclick="like('01')">
+                      <ons-icon id="button-post-like-01" icon="ion-ios-heart-outline"></ons-icon>
+                    </ons-button>
+
+                  </div>
+                  <div class="right corner-button bookmark">
+                  </div>
+                </ons-list-item>
+
+                <div class="post-like-info"><b>someone_one</b> and 24 other liked this.</div>
+                <div class="post-caption"><b>zom</b> beautiful kyoto #kyoto #fushimiinarishirine </div>
+                <div class="post-time">1 HOUR AGO</div>
+              </ons-card>
+
+              <ons-card class="post">
+                <ons-list-item class="post_title">
+                  <div class="left">
+
+                  </div>
+                  <div class="center">
+                    <div class="list-item__title"><b>zom</b></div>
+                    <div class="list-item__subtitle" style="font-size: 12px">Kinkakuji Temple, Kyoto</div>
+                  </div>
+                  <div class="right corner-button">
+                    <ons-toolbar-button>
+                      <ons-icon icon="ion-ios-more,material:ion-android-more-vertical"></ons-icon>
+                    </ons-toolbar-button>
+                  </div>
+                </ons-list-item>
+
+                <div style="text-align: center; position: relative;" ondblclick="like('02')">
+                  <ons-icon size="150px" id="post-like-02" class="post-like" icon="ion-ios-heart"></ons-icon>
+
+                </div>
+
+                <ons-list-item class="post-button-bar" modifier="nodivider">
+                  <div class="center" style="padding-top: 0px">
+                    <ons-button class="post-button" modifier="quiet" onclick="like('02')">
+                      <ons-icon id="button-post-like-02" icon="ion-ios-heart-outline"></ons-icon>
+                    </ons-button>
+
+                  </div>
+                  <div class="right corner-button bookmark">
+                  </div>
+                </ons-list-item>
+
+                <div class="post-like-info"><b>someone_one</b> and 24 other liked this.</div>
+                <div class="post-caption"><b>zom</b> Golden Temple ^_^ #kyoto #goldentemple</div>
+                <div class="post-time">1 HOUR AGO</div>
+              </ons-card>
+
+              <ons-card class="post">
+                <ons-list-item class="post_title">
+
+                  <div class="center">
+                    <div class="list-item__title"><b>zom</b></div>
+                    <div class="list-item__subtitle" style="font-size: 12px">Tokyo</div>
+                  </div>
+                  <div class="right">
+                    <ons-button class="corner-button" modifier="quiet">
+                      <ons-icon icon="ion-ios-more,material:ion-android-more-vertical"></ons-icon>
+                    </ons-button>
+                  </div>
+                </ons-list-item>
+
+
+
+                <ons-list-item class="post-button-bar" modifier="nodivider">
+                  <div class="center" style="padding-top: 0px">
+                    <ons-button class="post-button" modifier="quiet" onclick="like('03')">
+                      <ons-icon id="button-post-like-03" icon="ion-ios-heart-outline"></ons-icon>
+                    </ons-button>
+
+                  </div>
+                  <div class="right corner-button bookmark">
+                  </div>
+                </ons-list-item>
+
+                <div class="post-like-info"><b>someone_one</b> and 24 other liked this.</div>
+                <div class="post-caption"><b>zom</b> The harmony sakura brings #sakura #happy #harmony #love</div>
+                <div class="post-time">1 HOUR AGO</div>
+              </ons-card>
+            </div>
+
+
+      </div>
+
+      <style type="text/css">
+        .profile_wrapper {
+          display: inline-flex;
+        }
+
+        .profile_image_wrapper {
+          margin-right: 10px;
+          width: 35%;
+          position: relative;
+        }
+
+        .profile_image_wrapper ons-icon {
+          position: absolute;
+          color: #5fb4f4;
+          background: white;
+          border-radius: 80%;
+          text-align: center;
+          width: 24px;
+          bottom: 0%;
+          right: 0%;
+        }
+
+        .profile_image_wrapper img {
+          width: 100%;
+          border-radius: 50%;
+        }
+
+        .profile_info_wrapper {
+          width: 100%;
+          text-align: center;
+        }
+
+        .profile_extra_wrapper {
+          margin: 5px 0px 0px 0px;
+          font-size: 14px;
+        }
+
+        .profile_info_numbers {
+          font-size: 14px;
+          display: inline-flex;
+        }
+
+        .profile_info_numbers div {
+          margin-right: 7%;
+        }
+
+        .profile_info_text {
+          opacity: 0.5;
+          margin-top: -5px;
+        }
+
+        .profile_info_button {
+          height: 25px;
+          background: transparent;
+          border: 1px solid #e0e0e0;
+          border-radius: 7px;
+          color: black;
+          line-height: 13px;
+          font-size: 14px;
+          margin-top: 5px;
+        }
+
+        .profile_info_button.button--material {
+          min-height: 25px;
+          line-height: 25px !important;
+        }
+
+        .profile_button_bar {
+          text-align: center;
+          font-size: 26px;
+          height: 50px;
+          line-height: 40px;
+          border-top: 1px solid rgba(187, 187, 187, 0.51)
+        }
+
+        .profile_button_bar ons-col {
+          width: 25%;
+        }
+
+        .post {
+          margin: 0px;
+          padding: 0px 0px 15px;
+          font-size: 14px;
+          border-bottom: 1px solid rgba(175, 175, 175, 0.43);
+          border-radius: 0;
+        }
+
+        .post_title {
+          padding-left: 10px;
+        }
+
+        .post-caption {
+          padding-left: 10px;
+        }
+
+        .post-like-info {
+          margin-bottom: 5px;
+          padding-left: 10px;
+        }
+
+        .post-image {
+          width: 100%;
+        }
+
+        .post-time {
+          font-size: 10px;
+          opacity: 0.7;
+          margin-top: 5px;
+          padding-left: 10px;
+        }
+
+        .post-like {
+          opacity: 0;
+          width: 100%;
+          position: absolute;
+          top: 25%;
+          color: white;
+          transition: opacity 0.4s;
+        }
+
+        .post-button-bar {
+          height: 40px;
+          padding-left: 0px;
+        }
+
+        .post-button {
+          font-size: 26px;
+          color: #1f1f21;
+          line-height: 26px;
+        }
+
+        .corner-button {
+          color: black;
+          font-size: 25px;
+          padding-right: 0;
+        }
+
+        .like {
+          color: red;
+        }
+
+        .list-item__thumbnail {
+          border-radius: 50%;
+        }
+
+        .grid_wrapper {
+          width: 33%;
+          margin-left: 0.25%;
+          margin-right: 0.25%;
+        }
+
+        .grid_thumbnail {
+          width: 100%;
+        }
+      </style>
+
+    </ons-page>
+  </template>
+
+
+  <!-- User's Notification Page -->
+
+
+  <style>
+    .tabbar {
+      background-color: white;
+    }
+
+     :checked+.tabbar__button {
+      color: black;
+    }
+
+    .tabbar__button {
+      color: #bebebe;
+    }
+
+    .toolbar {
+      background-color: white;
+    }
+
+    .toolbar__title {
+      text-align: center;
+      color: #1f1f21;
+    }
+
+    .toolbar-button {
+      color: #1f1f21;
+    }
+  </style>
+
+</body>
+
+</html>
